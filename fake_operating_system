@@ -1,0 +1,40 @@
+"""
+MOSTRA O TEMPO DE ESPERA E DE PROCESSAMENTO DE CADA PROCESSO DE ACORDO SEU MÉTODO DE ESCALONAMENTO.
+    - Os processos devem ter seus tempo de execuçao, tempo de espera e tempo de retorno (tempo total de execução) fixos
+    - 10 processos
+"""
+
+import random
+import threading as th 
+
+def __init__(self):
+    pass
+    
+class fifo:
+    
+    def waiting_time():
+        
+        pass
+    
+    def turn_round_time():
+        
+        pass
+    
+    def average_time():
+        
+        pass
+
+class stj:
+    pass
+
+class sorteio:
+    pass
+
+class RR:
+    pass
+
+process = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] # Processos
+
+n = len(process) # numero de processos
+
+temp_exe = [10, 5, 8, 3, 2, 7, 12, 15, 1] # Tempo de execução de cada processo independente
