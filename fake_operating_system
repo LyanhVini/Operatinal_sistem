@@ -1,30 +1,74 @@
-"""
-MOSTRA O TEMPO DE ESPERA E DE PROCESSAMENTO DE CADA PROCESSO DE ACORDO SEU MÉTODO DE ESCALONAMENTO.
-    - Os processos devem ter seus tempo de execuçao, tempo de espera e tempo de retorno (tempo total de execução) fixos
-    - 10 processos
-"""
-
 import random
+from re import A
 import threading as th 
+    
+def fifo():
+    
+    sort = dict()
+    for i in range(n):
+        
+        # Fazer um dicionário em que a chave é o processo e os valores são o tempo de entrada e de saída
 
-def __init__(self):
-    pass
-    
-class fifo:
-    
-    def waiting_time():
-        
-        pass
-    
-    def turn_round_time():
-        
-        pass
-    
-    def average_time():
-        
-        pass
+        key = "Process" + str(i+1) # id de cada processo
 
+        arr = int(input("Digite o tempo de chegada do processo "+ str(i+1)+ ": "))
+        exe = int(input("Digite o tempo de execução "+ str(i+1)+ ": "))
+
+        a = []
+        a.append(arr)
+        a.append(exe)
+        sort[key] = a
+
+    print(sort)
+    print(len(sort))
+        
+
+    sort = sorted(sort.items(), key=lambda item: item[1][0]) # organizar os vetores
+
+    t_exit = []
+    for i in range(len(sort)):
+        
+        if(i==0): # first process
+            t_exit.append(sort[i][1][1])
+ 
+        # get prevET + newBT
+        else:
+            t_exit.append(t_exit[i-1] + sort[i][1][1])
+ 
+    t_tot = [] # tempo total é a subtração do tempo de saída menos o tempo de chegada
+    for i in range(len(sort)):
+        t_tot.append(t_exit[i] - sort[i][1][0])
+ 
+    t_wait = [] # tempo de espera é a diferença entre o tempo de execução e o tempo de retorno dos processos.
+    
+    for i in range(len(sort)):
+        t_wait.append(t_tot[i] - sort[i][1][1])
+ 
+    # CALCULAR TEMPO MÉDIO DE ESPERA
+
+    avg_wt = 0
+    for i in t_wait:
+        avg_wt +=i
+    avg_wt = (avg_wt/n)
+
+    # CALCULAR TEMPO MÉDIO DE RETORNO
+
+    avg_turn_round = 0
+    for i in t_tot:
+        avg_turn_round += i
+    avg_turn_round = (avg_turn_round/n)
+ 
+    print("Processo | Tempo de chegada* | Tempo de execução* | Tempo de saida | Tempo de retorno | Tempo de espera |")
+    
+    for i in range(n):
+        print(" ",sort[i][0],"   |       ",sort[i][1][0]," |        ",sort[i][1][1]," |        ",t_exit[i],"  |        ",t_tot[i],"  |        ",t_wait[i],"   |     ")
+    
+    print("Tempo médio de espera: ", avg_wt)
+    print("Tempo médio de retorno: ", avg_turn_round)
+
+   
 class stj:
+
     pass
 
 class sorteio:
@@ -33,8 +77,13 @@ class sorteio:
 class RR:
     pass
 
-process = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] # Processos
+
+
+process = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 
 
 n = len(process) # numero de processos
 
-temp_exe = [10, 5, 8, 3, 2, 7, 12, 15, 1] # Tempo de execução de cada processo independente
+t_exe = [10, 5, 8, 3, 2, 7, 12, 15, 1]
+
+fifo()
+
