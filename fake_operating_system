@@ -2,88 +2,177 @@ import random
 from re import A
 import threading as th 
     
-def fifo():
+class fifo:
     
-    sort = dict()
-    for i in range(n):
+    # INICIANDO AS VARIÁVEIS:
+
+    def __init__(self, processos, sort):
+
+        self.processos = processos
+        self.sort = sort
+
+    def exe_f():
+
+        t_exit = [] # Armeza o tempo de saída dos processos
+        t_tot = []  # tempo total é a subtração do tempo de saída menos o tempo de chegada
+        t_wait = [] # tempo de espera é a diferença entre o tempo de execução e o tempo de retorno dos processos.
+
+        for i in range(len(sort)):
         
-        # Fazer um dicionário em que a chave é o processo e os valores são o tempo de entrada e de saída
-
-        key = "Process" + str(i+1) # id de cada processo
-
-        arr = int(input("Digite o tempo de chegada do processo "+ str(i+1)+ ": "))
-        exe = int(input("Digite o tempo de execução "+ str(i+1)+ ": "))
-
-        a = []
-        a.append(arr)
-        a.append(exe)
-        sort[key] = a
-
-    print(sort)
-    print(len(sort))
-        
-
-    sort = sorted(sort.items(), key=lambda item: item[1][0]) # organizar os vetores
-
-    t_exit = []
-    for i in range(len(sort)):
-        
-        if(i==0): # first process
-            t_exit.append(sort[i][1][1])
- 
-        # get prevET + newBT
-        else:
-            t_exit.append(t_exit[i-1] + sort[i][1][1])
- 
-    t_tot = [] # tempo total é a subtração do tempo de saída menos o tempo de chegada
-    for i in range(len(sort)):
-        t_tot.append(t_exit[i] - sort[i][1][0])
- 
-    t_wait = [] # tempo de espera é a diferença entre o tempo de execução e o tempo de retorno dos processos.
+            if(i==0): 
+                t_exit.append(sort[i][1][1])
+            else:
+                t_exit.append(t_exit[i-1] + sort[i][1][1])
+   
+        for i in range(len(sort)):
+            t_tot.append(t_exit[i] - sort[i][1][0]) 
     
-    for i in range(len(sort)):
-        t_wait.append(t_tot[i] - sort[i][1][1])
+        for i in range(len(sort)): # calcula o tempo de espera
+            t_wait.append(t_tot[i] - sort[i][1][1])
  
-    # CALCULAR TEMPO MÉDIO DE ESPERA
+        # CALCULAR TEMPO MÉDIO DE ESPERA
 
-    avg_wt = 0
-    for i in t_wait:
-        avg_wt +=i
-    avg_wt = (avg_wt/n)
+        avg_wt = 0
+        for i in t_wait:
+            avg_wt = i + avg_wt
 
-    # CALCULAR TEMPO MÉDIO DE RETORNO
+        avg_wt = (avg_wt/len(sort))
 
-    avg_turn_round = 0
-    for i in t_tot:
-        avg_turn_round += i
-    avg_turn_round = (avg_turn_round/n)
+        # CALCULAR TEMPO MÉDIO DE RETORNO
+
+        avg_turn_round = 0
+        for i in t_tot:
+            avg_turn_round = i + avg_turn_round
+
+        avg_turn_round = (avg_turn_round/len(sort))
  
-    print("Processo | Tempo de chegada* | Tempo de execução* | Tempo de saida | Tempo de retorno | Tempo de espera |")
+        # Printando o resultado dos valores:
+
+        print("Processo | Tempo de chegada* | Tempo de execução* | Tempo de saida | Tempo de retorno | Tempo de espera |")
     
-    for i in range(n):
-        print(" ",sort[i][0],"   |       ",sort[i][1][0]," |        ",sort[i][1][1]," |        ",t_exit[i],"  |        ",t_tot[i],"  |        ",t_wait[i],"   |     ")
+        for i in range(len(sort)):
+            print(" ",sort[i][0],"      |        ",sort[i][1][0],"   |           ",sort[i][1][1]," |          ",t_exit[i],"  |          ",t_tot[i],"  |        ",abs(t_wait[i]),"   |     ")
     
-    print("Tempo médio de espera: ", avg_wt)
-    print("Tempo médio de retorno: ", avg_turn_round)
+        print("Tempo médio de espera: ", abs(avg_wt))
+        print("Tempo médio de retorno: ", abs(avg_turn_round))
 
    
 class stj:
 
+    def __init__(self, processos, sort):
+
+        self.processos = processos
+        self.sort = sort
     pass
 
 class sorteio:
-    pass
+
+    def __init__(self, processos, sort):
+
+        self.processos = processos
+        self.sort = sort
+
+    def exe_s():
+
+        t_exit = [] # Armeza o tempo de saída dos processos
+        t_tot = []  # tempo total é a subtração do tempo de saída menos o tempo de chegada
+        t_wait = [] # tempo de espera é a diferença entre o tempo de execução e o tempo de retorno dos processos.
+        
+        # ERROr: IMPLEMENTAR UMA ESTRUTURA QUE ESCOLHA ALEATORIAMENTE UMA CHAVE DO DICIONÁRIO sort.
+        print("\n", sort, "\n")
+        
+        for i in range(len(sort)):
+        
+            id = random.choice(list(sort.items()))
+
+            for i in range(id):
+        
+                if(i==0): 
+                    t_exit.append(sort[i][1][1])
+                else:
+                    t_exit.append(t_exit[i-1] + sort[i][1][1])
+   
+
+                t_tot.append(t_exit[i] - sort[i][1][0]) 
+    
+
+                t_wait.append(t_tot[i] - sort[i][1][1])
+ 
+        # CALCULAR TEMPO MÉDIO DE ESPERA
+
+        avg_wt = 0
+        for i in t_wait:
+            avg_wt = i + avg_wt
+
+        avg_wt = (avg_wt/len(sort))
+
+        # CALCULAR TEMPO MÉDIO DE RETORNO
+
+        avg_turn_round = 0
+        for i in t_tot:
+            avg_turn_round = i + avg_turn_round
+
+        avg_turn_round = (avg_turn_round/len(sort))
+ 
+        # Printando o resultado dos valores:
+
+        print("Processo | Tempo de chegada* | Tempo de execução* | Tempo de saida | Tempo de retorno | Tempo de espera |")
+    
+        for i in range(len(sort)):
+            print(" ",sort[i][0],"      |        ",sort[i][1][0],"   |           ",sort[i][1][1]," |          ",t_exit[i],"  |          ",t_tot[i],"  |        ",abs(t_wait[i]),"   |     ")
+    
+        print("Tempo médio de espera: ", abs(avg_wt))
+        print("Tempo médio de retorno: ", abs(avg_turn_round))
 
 class RR:
+
+    def __init__(self, processos, sort):
+
+        self.processos = processos
+        self.sort = sort
+
     pass
 
+#######################################################################################################################
 
+processos = [1, 2, 3]
 
-process = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 
+sort = dict() # Vai armazenar junto a processo referente e sua tempo de chegada e de execução
 
-n = len(process) # numero de processos
+for i in range(len(processos)):
+        
+    # Fazer um dicionário em que a chave é o processo e os valores são o tempo de entrada e de saída
+        
+    arr = int(input("Digite o tempo de chegada do processo "+ str(i + 1)+ ": "))
+    exe = int(input("Digite o tempo de execução "+ str(i + 1)+ ": "))
 
-t_exe = [10, 5, 8, 3, 2, 7, 12, 15, 1]
+    key = int(i+1) # id de cada processo
+    a = [] # Armazena os tempo de chegada e de execução    
+    a.append(arr)
+    a.append(exe)
+    sort[key] = a
 
-fifo()
+d = sorted(sort.keys(), key=lambda item: item[1][0])
+sort = sorted(sort.items(), key=lambda item: item[1][0])
+
+print(d)
+
+# organizar os vetore
+
+print("\n RESULTADOS: \n")
+
+print("==================================================")
+print("Buffer dos processos: ", sort) 
+print("Número de processos: ", len(sort))
+print("==================================================")
+        
+# EXECUTANDO FIFO:
+#scho1 = fifo
+#scho1(processos, sort)
+#scho1.exe_f()
+
+# EXECUTANDO
+scho2 = sorteio
+scho2(processos, sort)
+scho2.exe_s()
 
