@@ -12,11 +12,15 @@ class fifo:
         self.sort = sort
 
     def exe_f():
+        
+        print("\nESCALONADOR FIFO EXECUTANDO: \n")
 
         t_exit = [] # Armeza o tempo de saída dos processos
         t_tot = []  # tempo total é a subtração do tempo de saída menos o tempo de chegada
         t_wait = [] # tempo de espera é a diferença entre o tempo de execução e o tempo de retorno dos processos.
 
+        print(sort)
+        
         for i in range(len(sort)):
         
             if(i==0): 
@@ -57,13 +61,15 @@ class fifo:
         print("Tempo médio de retorno: ", abs(avg_turn_round))
 
    
-class stj:
-
+class sjf:
+    
     def __init__(self, processos, sort):
-
+        
         self.processos = processos
         self.sort = sort
-    pass
+        
+    def exe_s():
+        
 
 class sorteio:
 
@@ -71,30 +77,54 @@ class sorteio:
 
         self.processos = processos
         self.sort = sort
+        n = 3
 
     def exe_s():
 
+        print("\nESCALONADOR SORTEIO EXECUTANDO: \n")
+        
         t_exit = [] # Armeza o tempo de saída dos processos
         t_tot = []  # tempo total é a subtração do tempo de saída menos o tempo de chegada
         t_wait = [] # tempo de espera é a diferença entre o tempo de execução e o tempo de retorno dos processos.
         
         # ERROr: IMPLEMENTAR UMA ESTRUTURA QUE ESCOLHA ALEATORIAMENTE UMA CHAVE DO DICIONÁRIO sort.
-        print("\n", sort, "\n")
         
+        l = []
         for i in range(len(sort)):
+    
+            id = random.choice(list(d.items()))
+            a = id[0]
+            l.append(a)
+            
+        print(l)
         
-            id = random.choice(list(sort.items()))
+        for i in l:
+        
+            #id = random.choice(list(d.items()))
+            #print(id)
+            #c = [*sort]
+            #print(c)
+            #id = random.choice(c)
+            
+            #a = id[0]
+            #print("Processo: ", a)
 
-            for i in range(id):
-        
+
+            for i in range(len(sort)):
+
                 if(i==0): 
+                
                     t_exit.append(sort[i][1][1])
+                    
                 else:
+                    
                     t_exit.append(t_exit[i-1] + sort[i][1][1])
-   
+
+            for i in range(len(sort)):
 
                 t_tot.append(t_exit[i] - sort[i][1][0]) 
-    
+
+            for i in range(len(sort)):
 
                 t_wait.append(t_tot[i] - sort[i][1][1])
  
@@ -119,20 +149,137 @@ class sorteio:
         print("Processo | Tempo de chegada* | Tempo de execução* | Tempo de saida | Tempo de retorno | Tempo de espera |")
     
         for i in range(len(sort)):
-            print(" ",sort[i][0],"      |        ",sort[i][1][0],"   |           ",sort[i][1][1]," |          ",t_exit[i],"  |          ",t_tot[i],"  |        ",abs(t_wait[i]),"   |     ")
+            
+            print(" ",sort[i][0],"        |       ",sort[i][1][0],"     |           ",sort[i][1][1],"   |          ",t_exit[i],"  |          ",t_tot[i],"  |        ",abs(t_wait[i]),"   |     ")
     
         print("Tempo médio de espera: ", abs(avg_wt))
         print("Tempo médio de retorno: ", abs(avg_turn_round))
 
-class RR:
+"""
+class RR():
 
     def __init__(self, processos, sort):
 
         self.processos = processos
         self.sort = sort
+        self.n = len(sort)
 
-    pass
+    # quantum: tempo que precisa processar
+    # bt: tempo de execução
+    # wt: tempo de espera
+    # rem_bt: armazena o tempo total de execução dos processos
+    
+    def t_wait(processos, n, bt,
+                         wt, time):
+        rem_bt = [0] * n
+ 
+        # armazena o tempo total de execução dos processos em rem_bt
+        for i in range(n):
+            rem_bt[i] = bt[i]
+        t = 0 # tempo contando
+ 
+    # Keep traversing processes in round
+    # robin manner until all of them are
+    # not done.
+        while(1):
+            done = True
+ 
+            # Realiza em tdos os processos    
+            for i in range(n):
+             
+                # If burst time of a process is greater
+                # than 0 then only need to process further
+                if (rem_bt[i] > 0) :
+                    done = False # There is a pending process
+                 
+                    if (rem_bt[i] > time) :
+                 
+                        #Aumente o valor de t, ou seja, mostra
+                        # quanto tempo um processo foi processado
+                        t += time
+ 
+                        # Diminua o burst_time do processo 
+                        # atual por quantum
 
+                        rem_bt[i] -= time
+                 
+                    # Se o tempo de execução for menor ou igual ao quantum. 
+                    # Último ciclo para este processo
+                    else:
+                 
+                        # Increase the value of t i.e. shows
+                        # how much time a process has been processed
+                        t = t + rem_bt[i]
+ 
+                        #tempo de espera é o tempo atual menos o 
+                        # tempo usado por este processo
+                        
+                        wt[i] = t - bt[i]
+
+                        # À medida que o processo é totalmente 
+                        # executado, faça seu tempo de rajada restante = 0
+                        rem_bt[i] = 0
+                 
+            # Se todos os processos são feitos
+            if (done == True):
+                break
+             
+    # Function to calculate tempo de retorno total
+    def t_retorno(self, processes, n, exe, t_wait, t_tot):
+        
+        # Calculating turnaround time
+        for i in range(n):
+            t_tot[i] = exe[i] + t_wait[i]
+        
+ 
+ 
+    # Function to calculate tempo de espera medio
+    # and turn-around times.
+    def exe_rr(processes, n, exe, time):
+
+        wt = [0] * n
+        tot = [0] * n
+ 
+        # Function to find waiting time
+        # of all processes
+        t_wait(processes, n, exe,
+                         t_wait, time)
+ 
+        # Function to find turn around time
+        # for all processes
+        t_retorno(processes, n, exe,
+                                t_wait, t_tot)
+ 
+        # Display processes along with all details
+        print("Processes    Burst Time     Waiting",
+                     "Time    Turn-Around Time")
+        total_wait = 0
+        total_tot = 0
+        for i in range(n):
+ 
+            total_wait = total_wait + t_wait[i]
+            total_tot = total_tot + tot[i]
+            print(" ", i + 1, "\t\t", exe[i],
+            "\t\t", t_wait[i], "\t\t", exe[i])
+ 
+        print("\nAverage waiting time = %.5f "%(total_wait /n) )
+        print("Average turn around time = %.5f "% (total_tot / n))
+     
+    
+    if __name__ =="__main__":
+     
+        # Process id's
+        proc = [1, 2, 3]
+        n = 3
+ 
+        # Burst time of all processes
+        burst_time = [10, 5, 8]
+ 
+        # Time quantum
+        quantum = 2;
+        findavgTime(proc, n, burst_time, quantum)
+"""
+    
 #######################################################################################################################
 
 processos = [1, 2, 3]
@@ -145,19 +292,19 @@ for i in range(len(processos)):
         
     arr = int(input("Digite o tempo de chegada do processo "+ str(i + 1)+ ": "))
     exe = int(input("Digite o tempo de execução "+ str(i + 1)+ ": "))
-
     key = int(i+1) # id de cada processo
     a = [] # Armazena os tempo de chegada e de execução    
     a.append(arr)
     a.append(exe)
     sort[key] = a
 
-d = sorted(sort.keys(), key=lambda item: item[1][0])
-sort = sorted(sort.items(), key=lambda item: item[1][0])
+print("\n")
+d = dict(sorted(sort.items(), key=lambda item: item[1][0])) # dicionário contendo a chave o id do processo e como valores o tempo de chegada e execução
+sort = sorted(sort.items(), key=lambda item: item[1][0]) # lista contendo a chave o id do processo e como valores o tempo de chegada e execução
 
-print(d)
+print("\nDicionários dos programas -> ", d)
 
-# organizar os vetore
+# organizar os vetores
 
 print("\n RESULTADOS: \n")
 
@@ -166,13 +313,26 @@ print("Buffer dos processos: ", sort)
 print("Número de processos: ", len(sort))
 print("==================================================")
         
-# EXECUTANDO FIFO:
-#scho1 = fifo
-#scho1(processos, sort)
-#scho1.exe_f()
+# EXECUTANDO FIFO.....
+scho1 = fifo
+scho1(processos, sort)
+scho1.exe_f()
 
-# EXECUTANDO
+# EXECUTANDO SORTEIO.....
 scho2 = sorteio
 scho2(processos, sort)
 scho2.exe_s()
+
+# EXECUTANDO RR....
+#scho3 = RR
+#scho3(processos, sort)
+#scho3.exe_rr(processos, len(sort), exe, 3)
+
+# EXECUTANDO SJF...
+n = len(sort)
+
+
+scho4 = sjf
+scho4(processos, sort)
+scho4.exe_s()
 
